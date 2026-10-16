@@ -18,5 +18,10 @@ public interface UserDao {
 	
 	//查询所有用户信息（登录验证使用）
 	List<MyUserInfo> selectAllUserInfo();
+	
+	//修改信息（my_info.jsp页面）
+	boolean updateUserInfo(Integer user_id, Integer user_info_id, String userPass, String userPhone, String userMoney);
+
+	
 
 }

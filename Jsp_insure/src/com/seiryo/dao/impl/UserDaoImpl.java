@@ -88,6 +88,30 @@ public class UserDaoImpl implements UserDao{
 		}
 		return list;
 	}
-	
+	/**
+	 * 修改用户信息
+	 * 
+	 */
+	@Override
+	public boolean updateUserInfo(Integer user_id, Integer user_info_id, String userPass, String userPhone, String userMoney) {
+	    try {
+	        String sql1 = "UPDATE my_user SET user_password = ? WHERE user_id = ?";
+	        boolean r1 = JDBCUTILE.upDataBaseTable(sql1, userPass, user_id);
+
+	        String sql2 = "UPDATE my_user_info SET user_phone = ?, user_money = ? WHERE user_info_id = ?";
+	        boolean r2 = JDBCUTILE.upDataBaseTable(sql2, userPhone, userMoney, user_info_id);
+
+	        return r1 && r2;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        try { JDBCUTILE.dbClose(); 
+	        } catch (Exception e){ 
+	         e.printStackTrace(); }
+	    }
+	    return false;
+	}
+
+
 
 }

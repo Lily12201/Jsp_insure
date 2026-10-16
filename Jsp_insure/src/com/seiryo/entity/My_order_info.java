@@ -31,6 +31,10 @@ public class My_order_info extends My_order{
 	private String order_commodity_time_length;
 	
 	private String order_sum_price;
+	// 商品名（联查commodity得到）
+	private String commodity_name;  
+	// 投保人姓名（联查my_user_info得到）
+	private String user_name;     
 
 	public My_order_info(String order_id, Integer user_id, Integer commodity_id, Integer order_info_id,
 			String order_commodity_liability1, String order_commodity_liability2, String order_commodity_liability3,
@@ -185,6 +189,18 @@ public class My_order_info extends My_order{
 	public void setOrder_sum_price(String order_sum_price) {
 		this.order_sum_price = order_sum_price;
 	}
+	public String getCommodity_name() {
+		return commodity_name; 
+		}
+	public void setCommodity_name(String commodity_name) { 
+		this.commodity_name = commodity_name;
+		}
+	public String getUser_name() { 
+		return user_name; 
+		}
+	public void setUser_name(String user_name) {
+		this.user_name = user_name; 
+		}
 
 	@Override
 	public String toString() {

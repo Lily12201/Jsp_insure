@@ -25,5 +25,7 @@ public interface UserService {
 	//用户登录
 	MyUserInfo pdUserLogin(String email,String pass);
 	
+	//修改用户信息
+	boolean updateUserInfo(Integer user_id, Integer user_info_id,String userPass, String userPhone, String userMoney);
 
 }

@@ -30,7 +30,10 @@ public class UserServlet extends HttpServlet{
 			userRegister(req,resp);
 		}else if("user_login".equals(opt)) {
 			userLogin(req,resp);
+		}else if("user_update".equals(opt)) {
+		    userUpdate(req,resp);
 		}
+
 		
 	}
 	
@@ -91,4 +94,53 @@ public class UserServlet extends HttpServlet{
 		}
 		resp.getWriter().println(a);
 	}
+	
+	/**
+	 * 修改用户信息（密码+手机号+充值）
+	 * @Title: userUpdate  
+	 * @Description: TODO(这里用一句话描述这个方法的作用)  
+	 * @param @param req
+	 * @param @param resp
+	 * @param @throws ServletException
+	 * @param @throws IOException    参数  
+	 * @return void    返回类型  
+	 * @throws
+	 */
+	private void userUpdate(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+	    //1、取前端数据
+	    String userPass = req.getParameter("userPass");
+	    String userPhone = req.getParameter("userPhone");
+	    String chargeMoney = req.getParameter("chargeMoney");
+	    //2、取当前登录用户
+	    HttpSession session = req.getSession();
+	    MyUserInfo user = (MyUserInfo) session.getAttribute("user");
+	    //3、没登录不允许修改
+	    if(user == null) {
+	        resp.getWriter().println(0);
+	        return;
+	    }
+	    //4、调service更新（余额=原余额+充值）
+	    int money = 0;
+	    try {
+	        money = Integer.parseInt(user.getUser_money() == null ? "0" : user.getUser_money())
+	                + Integer.parseInt(chargeMoney);
+	    } catch (NumberFormatException e) {
+	        money = Integer.parseInt(chargeMoney);
+	    }
+	    //因为user_money为字符串类型，所以需要在更新数据库时，把参数变成字符串类型
+	    boolean result = userService.updateUserInfo(user.getUser_id(), user.getUser_info_id(), userPass, userPhone, String.valueOf(money));
+	    //5、成功后同步更新session里的用户数据（否则页面回显还是旧值）
+	    if(result) {
+	        user.setUser_password(userPass);
+	        user.setUser_phone(userPhone);
+	        user.setUser_money(String.valueOf(money));
+	        session.setAttribute("user", user);
+	        //注意：这里如果输出有换行符的话，返回前端是"1\n"，在JS中1\n=="1"是false
+	        resp.getWriter().print(1);
+	    }else {
+	        resp.getWriter().println(0);
+	    }
+	}
+
+	
 }

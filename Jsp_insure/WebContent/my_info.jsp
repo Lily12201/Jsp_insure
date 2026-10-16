@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+
+<c:if test="${empty sessionScope.user}">
+    <c:redirect url="login.jsp" />
+</c:if>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -9,7 +14,8 @@
 		<link rel="stylesheet" type="text/css" href="css/index.css" />
 		<link rel="stylesheet" href="https://at.alicdn.com/t/c/font_3881267_wfv3iyzbijg.css">
 		<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
-		<script type="text/javascript" src="js/banner.js"></script>
+		<script type="text/javascript" src="js/banner.js"></script> 
+		
 		<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
 		<script type="text/javascript" src="js/my_info.js"></script>
 	</head>
@@ -23,10 +29,19 @@
 						<marquee id="lb" direction="left">
 							ログインしてサインするとプレゼントがあります
 						</marquee>
+						<%-- 这里和index.jsp的逻辑一样，没登录显示login/regist;登录了显示こんにちは！--%>
+						<%--从后端收到的数据：服务器内部的内存读取操作 --%>				
+						<c:if test="${not empty sessionScope.user}">
+							<button type="button" id="userlogin">${sessionScope.user.user_name} 
+					            ${sessionScope.user.user_sex == '女' ? '女士' : '先生'}，こんにちは！
+					         </button>
+						</c:if>
+						  <%-- 未登录：显示 login/regist --%>
+						<c:if test="${empty sessionScope.user}">
 						<a href="login.jsp">
 							<button type="button" id="userlogin">login/regist</button>
 						</a>
-						
+						</c:if>
 					</div>
 				</div>
 			</div>
@@ -55,30 +70,33 @@
 					</div>
 					<div id="context_text_2">
 						<div id="context_text_2_1">
-							<b>さん、あなたの情報は次の通りです。</b>
+						<!-- 补齐前端的EL标签，接收后端数据 -->
+							<b>${sessionScope.user.user_name}さん、あなたの情報は次の通りです。</b>
 							<table id="table_myinfo">
 								<tr>
 									<th>メールアドレス：</th>
-									<td></td>
+									<td>${sessionScope.user.user_email}</td>
 								</tr>
 								<tr>
 									<th>パスワード：</th>
-									<td><input type="password" name="userPass" /></td>
+									<td><input type="password" name="userPass" id="userPass" value="${sessionScope.user.user_password}"/></td>
 								</tr>
 								<tr>
 									<th>あなたの誕生日：</th>
-									<td></td>
+									<td>${sessionScope.user.user_birthday}</td>
 								</tr>
 								<tr>
 									<th>携帯番号：</th>
 									<td>
-										<input type="text" maxlength="5" name="userPhone" id="userPhone5" " />
+										<input type="text" maxlength="11" name="userPhone" id="userPhone" value="${sessionScope.user.user_phone}" />
 									</td>
 								</tr>
 								<tr>
-									<th>現在の残高：</th>
+									<th>現在の残高:</th>
 									<td>
-										
+										${sessionScope.user.user_money} 円
+						               　チャージ金額の入力:
+						               <input type="text" name="chargeMoney" id="chargeMoney" value="0" />
 									</td>
 								</tr>
 								<tr>

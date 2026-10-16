@@ -23,9 +23,20 @@
 						<marquee id="lb" direction="left">
 							ログインしてサインするとプレゼントがあります
 						</marquee>
-						<a href="login.jsp">
-							<button type="button" id="userlogin">login/regist</button>
-						</a>
+						<%--右上角的按钮需要区分登录和未登录状态 --%>
+						<c:if test="${not empty sessionScope.user}">
+							<a href="my_oder.jsp">
+						 		<button type="button" id="userlogin">${sessionScope.user.user_name} 
+					            ${sessionScope.user.user_sex == '女' ? '女士' : '先生'}，こんにちは！
+					           </button>
+					          </a>
+					      </c:if>
+						   <%-- 未登录：显示 login/regist --%>
+						   <c:if test="${empty sessionScope.user}">
+							<a href="login.jsp">
+								<button type="button" id="userlogin">login/regist</button>
+							</a>
+							</c:if>
 					</div>
 				</div>
 			</div>
@@ -158,7 +169,7 @@
 								<span style="color: red">*</span>&nbsp;名前：<input type="text" id="userName2" />
 							</div>
 							<div class="div_ac">
-								<span style="color: red">*</span>&nbsp;とし：<input type="text" id="userCity2" />&nbsp;&nbsp;&nbsp;
+								<span style="color: red">*</span>&nbsp;とし：<input type="text" id="commodity_location" placeholder="中国大陆 または 日本" />&nbsp;&nbsp;&nbsp;
 								<span style="color: red">*</span>&nbsp;携帯番号：<input type="text" id="userPhone2" />
 							</div>
 						</div>
@@ -184,6 +195,8 @@
 									<div class="div_acac">
 										<input hidden="hidden" id="commodity_id" value="${commodityInfo.getCommodity_id()}" />
 										<input hidden="hidden" id="price_value" value="${commodityInfo.getCommodity_price()}" />
+										<%--因为要验证被保人的国家和商品适用国家一致，所以要调用applicable_location --%>
+										<input hidden="hidden" id="commodity_location_range" value="${commodityInfo.getCommodity_applicable_location()}" />
 										<b><span  id="price_view">${commodityInfo.getCommodity_price()}</span><span>円</span></b>
 									</div>
 									<a href="#">

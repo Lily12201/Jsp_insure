@@ -18,13 +18,13 @@ $(function(){
 
 //请求商品列表并渲染到#context_text
 function loadCommodity(url){
-	alert("要请求的URL = " + url);          // ← 加这行	
+	
 	$.ajax({
 		url:url,
 		type:"post",
 		dataType:"json",
 		success:function(data){
-			alert("后端返回条数 = " + data.length);   // ← 加这行
+		
 			//先清空，再渲染
 			$("#context_text").empty();
 			var html="";
@@ -60,7 +60,7 @@ function loadCommodity(url){
 			
 		},
 		error:function(){
-			alert("失败! status=" + status + " xhr.status=" + xhr.status);  // ← 改这行
+		
 			alert("ネットワークにエラーがありました。後で再試行してください！");
 		}
 	});

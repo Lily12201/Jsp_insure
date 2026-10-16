@@ -12,6 +12,12 @@ window.onload= function(){
         //获取事件代理的父元素section
         let secEle = document.getElementsByTagName("section")[0];
  
+		//由于my_info.jsp页面修改不成功，Network显示报错，所以需要加个预防判断
+		if(!pEle||!secEle){
+			//如果找不到这两标签说明不是首页，直接结束这个脚本
+			return;
+		}
+		
         let imgArr = [
             "https://baoxian.pingan.com/uploadfile/clause/image/website/1670833686560.jpg",
             "https://baoxian.pingan.com/uploadfile/clause/image/website/1656322263966.jpg",

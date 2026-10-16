@@ -73,6 +73,13 @@ public class UserServiceImpl implements UserService{
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 修改用户信息
+	 */
+	@Override
+	public boolean updateUserInfo(Integer user_id, Integer user_info_id,String userPass, String userPhone, String userMoney) {
+	    return userDao.updateUserInfo(user_id, user_info_id, userPass, userPhone, userMoney);
+	}
 
 }
