@@ -53,16 +53,19 @@ public class OrderServlet extends HttpServlet{
 			resp.getWriter().print("0");
 			return;
 		}
-		//2、获取前端数据
-		My_order_info info = new My_order_info();
-		Integer commodity_id=Integer.parseInt(req.getParameter("commodity_id"));
-		String beneficiaryName=req.getParameter("beneficiaryName");
-		String beneficiarylocation=req.getParameter("beneficiarylocation");
-		String beneficiaryPhone=req.getParameter("beneficiaryPhone");
-		String timeLength=req.getParameter("timeLength");
-		String startDate=req.getParameter("startDate");
-		String sumPrice=req.getParameter("sumPrice");
-		System.out.println("收到参数：name=" + beneficiaryName + "，phone=" + beneficiaryPhone);
+		//2、获取前端数据并填入订单对象
+			My_order_info info = new My_order_info();
+			info.setCommodity_id(Integer.parseInt(req.getParameter("commodity_id")));
+		    info.setOrder_beneficiary_name(req.getParameter("beneficiaryName"));
+		    info.setOrder_beneficiary_city(req.getParameter("beneficiarylocation"));
+		    info.setOrder_beneficiary_phone(req.getParameter("beneficiaryPhone"));
+		    info.setOrder_commodity_time_length(req.getParameter("timeLength"));
+		    info.setOrder_commodity_time_start(req.getParameter("startDate"));
+		    info.setOrder_sum_price(req.getParameter("sumPrice"));
+		    //测试使用
+		    System.out.println("收到参数：name=" + info.getOrder_beneficiary_name()
+		            + "，phone=" + info.getOrder_beneficiary_phone());
+		
 
 		//3、调service做全部业务校验
 		String code = orderService.buyCommodity(user, info);
@@ -72,7 +75,7 @@ public class OrderServlet extends HttpServlet{
 			session.setAttribute("user", user);
 		}
 		//5、输出返回码给前端
-		resp.getWriter().println(code);
+		resp.getWriter().print(code);
 	}
 
 		

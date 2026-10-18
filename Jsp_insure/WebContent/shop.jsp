@@ -25,7 +25,7 @@
 						</marquee>
 						<%--右上角的按钮需要区分登录和未登录状态 --%>
 						<c:if test="${not empty sessionScope.user}">
-							<a href="my_oder.jsp">
+							<a href="my_order.jsp">
 						 		<button type="button" id="userlogin">${sessionScope.user.user_name} 
 					            ${sessionScope.user.user_sex == '女' ? '女士' : '先生'}，こんにちは！
 					           </button>
@@ -182,7 +182,7 @@
 							<div class="div_ac">
 								<span style="color: red">*</span>&nbsp;有効日：<input type="text" id="staDateTime" readonly="readonly" />
 								&nbsp;&nbsp;&nbsp;賞味期限：
-								<select id="endDataTime" onchange="js(this,'endDataTime')">
+								<select id="endDataTime" onchange="calcYearPrice(this)">
 									<option value="0">1年</option>
 									<option value="2">2年</option>
 									<option value="3">3年</option>

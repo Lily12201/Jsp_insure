@@ -3,7 +3,8 @@
  */
 //设置js方法来操作界面下拉框，动态设置值
 function js(obj,v){
-	var sum = parseFloat(obj.value) * 10;
+	//这里是总金额；不应增加10倍，我删掉了
+	var sum = parseFloat(obj.value) ;
 	sessionStorage.setItem(v,sum + "");
 	var sum_value = 0;
 	var bo = true;
@@ -50,6 +51,24 @@ window.onload = function(){
 	//运行
 	setDate();
 }
+//保险期间变化：总额=（基础价+已选加价）×年数
+function calcYearPrice(obj){
+	var years = parseInt(obj.value);
+	if(isNaN(years) || years < 1){ years = 1; }
+	var total = parseFloat(document.getElementById("price_value").value);
+	var dv = sessionStorage.getItem("dataValue");
+	if(dv != null){
+		var keys = dv.split(",");
+		for(var i = 0; i < keys.length; i++){
+			if(keys[i] != ""){
+				var v = parseFloat(sessionStorage.getItem(keys[i]));
+				if(!isNaN(v)){ total += v; }
+			}
+		}
+	}
+	document.getElementById("price_view").innerHTML = total * years;
+}
+
 //补齐购买
 $(function(){
 	$("#buyCommodity").click(function(){
@@ -111,7 +130,7 @@ $(function(){
 						success:function(result){
 							if(result=="1"){
 								alert("購入が成功しました！");
-								location.href="/Jsp_insure/OrderServlet?opt="
+								location.href="/Jsp_insure/OrderServlet?opt=select_order_by_user_id"
 							}else if(result=="2"){
 								//余额不足，去我的信息界面充值
 								alert("残高が足りません。チャージページへ移動します！");

@@ -21,9 +21,20 @@
 						<marquee id="lb" direction="left">
 							ログインしてサインするとプレゼントがあります
 						</marquee>
-						<a href="login.jsp">
-							<button type="button" id="userlogin">login/regist</button>
-						</a>
+						<%-- 已登录：显示 姓名+先生，こんにちは！ --%>
+					   <c:if test="${not empty sessionScope.user}">
+					       <a href="my_info.jsp">
+					           <button type="button" id="userlogin">${sessionScope.user.user_name} 
+					            ${sessionScope.user.user_sex == '女' ? '女士' : '先生'}，こんにちは！
+					           </button>
+					       </a>
+					   </c:if>
+					   <%-- 未登录：显示 login/regist --%>
+					   <c:if test="${empty sessionScope.user}">
+					       <a href="login.jsp">
+					           <button type="button" id="userlogin">login/regist</button>
+					       </a>
+					   </c:if>
 						
 					</div>
 				</div>
@@ -65,7 +76,19 @@
 									<th>終了時間</th>
 									<th>保険加入期間</th>
 								</tr>
-								
+								 <%-- c:forEach 接收数据 --%>
+						   <c:forEach var="o" items="${orderList}">
+						       <tr>
+						           <td>${o.order_id}</td>
+						           <td>${o.commodity_name}</td>
+						           <td>${o.order_sum_price}円</td>
+						           <td>${o.user_name}</td>
+						           <td>${o.order_beneficiary_name}</td>
+						           <td>${o.order_commodity_time_start}</td>
+						           <td>${o.order_commodity_time_end}</td>
+						           <td>${o.order_commodity_time_length}年</td>
+						       </tr>
+						   </c:forEach>
 							</table>
 						</div>
 					</div>
