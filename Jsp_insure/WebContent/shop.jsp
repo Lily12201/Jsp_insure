@@ -169,7 +169,7 @@
 								<span style="color: red">*</span>&nbsp;名前：<input type="text" id="userName2" />
 							</div>
 							<div class="div_ac">
-								<span style="color: red">*</span>&nbsp;とし：<input type="text" id="commodity_location" placeholder="中国大陆 または 日本" />&nbsp;&nbsp;&nbsp;
+								<span style="color: red">*</span>&nbsp;とし：<input type="text" id="commodity_location" placeholder="中国大陸 または 日本" />&nbsp;&nbsp;&nbsp;
 								<span style="color: red">*</span>&nbsp;携帯番号：<input type="text" id="userPhone2" />
 							</div>
 						</div>
@@ -181,7 +181,7 @@
 						<div id="context_text_four2">
 							<div class="div_ac">
 								<span style="color: red">*</span>&nbsp;有効日：<input type="text" id="staDateTime" readonly="readonly" />
-								&nbsp;&nbsp;&nbsp;賞味期限：
+								&nbsp;&nbsp;&nbsp;有効期限：
 								<select id="endDataTime" onchange="calcYearPrice(this)">
 									<option value="0">1年</option>
 									<option value="2">2年</option>

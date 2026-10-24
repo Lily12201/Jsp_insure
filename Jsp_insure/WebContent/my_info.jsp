@@ -32,6 +32,7 @@
 						<%-- 这里和index.jsp的逻辑一样，没登录显示login/regist;登录了显示こんにちは！--%>
 						<%--从后端收到的数据：服务器内部的内存读取操作 --%>				
 						<c:if test="${not empty sessionScope.user}">
+							 <a href="login.jsp">
 							<button type="button" id="userlogin">${sessionScope.user.user_name} 
 					            ${sessionScope.user.user_sex == '女' ? '女士' : '先生'}，こんにちは！
 					         </button>
@@ -48,7 +49,7 @@
 			<div id="top2">
 				<div id="top2_text">
 					<ul id="top2_text_ul">
-						<li><b>すべての保険</b></li>
+						<li><a href="${pageContext.request.contextPath}/index.jsp"><b>すべての保険</b></a></li>
 						<li><b>健康保険</b></li>
 						<li><b>意外保険</b></li>
 						<li><b>企業保険</b></li>
@@ -96,7 +97,8 @@
 									<td>
 										${sessionScope.user.user_money} 円
 						               　チャージ金額の入力:
-						               <input type="text" name="chargeMoney" id="chargeMoney" value="0" />
+						               <input type="text" name="chargeMoney" id="chargeMoney" value="0" 
+						               		value="" placeholder="0（チャージしない場合は空欄）"/>
 									</td>
 								</tr>
 								<tr>

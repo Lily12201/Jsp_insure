@@ -107,40 +107,71 @@ public class UserServlet extends HttpServlet{
 	 * @throws
 	 */
 	private void userUpdate(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-	    //1、取前端数据
-	    String userPass = req.getParameter("userPass");
-	    String userPhone = req.getParameter("userPhone");
-	    String chargeMoney = req.getParameter("chargeMoney");
-	    //2、取当前登录用户
+
+
+	    //1、取当前登录用户
 	    HttpSession session = req.getSession();
 	    MyUserInfo user = (MyUserInfo) session.getAttribute("user");
-	    //3、没登录不允许修改
-	    if(user == null) {
-	        resp.getWriter().println(0);
+	    if (user == null) {
+	        resp.getWriter().print("0");
 	        return;
 	    }
-	    //4、调service更新（余额=原余额+充值）
-	    int money = 0;
-	    try {
-	        money = Integer.parseInt(user.getUser_money() == null ? "0" : user.getUser_money())
-	                + Integer.parseInt(chargeMoney);
-	    } catch (NumberFormatException e) {
-	        money = Integer.parseInt(chargeMoney);
+
+	    //2、取前端数据
+	    String userPass    = req.getParameter("userPass");
+	    String userPhone   = req.getParameter("userPhone");
+	    String chargeMoney = req.getParameter("chargeMoney");
+
+	    //3、服务端二次校验
+	    if (userPass == null || !userPass.matches("\\w{6,16}")) {
+	        resp.getWriter().print("0");
+	        return;
 	    }
-	    //因为user_money为字符串类型，所以需要在更新数据库时，把参数变成字符串类型
-	    boolean result = userService.updateUserInfo(user.getUser_id(), user.getUser_info_id(), userPass, userPhone, String.valueOf(money));
-	    //5、成功后同步更新session里的用户数据（否则页面回显还是旧值）
-	    if(result) {
+	    if (userPhone == null || !userPhone.matches("1\\d{10}")) {
+	        resp.getWriter().print("0");
+	        return;
+	    }
+
+	    //4、解析原余额（空/非法一律当 0）
+	    //余额是 String 要转数值、long 范围大防溢出、和前端 Number 精度匹配
+	    //0L 明确告诉读代码的人"这是 long"，不用去猜。
+	    long oldMoney = 0L;
+	    String oldMoneyStr = user.getUser_money();
+	    if (oldMoneyStr != null && !oldMoneyStr.trim().isEmpty()) {
+	        try { oldMoney = Long.parseLong(oldMoneyStr.trim()); }
+	        catch (NumberFormatException e) { oldMoney = 0L; }
+	    }
+
+	    //5、解析充值金额：null / 空 / 非法 / <=0 都视为"不充值"
+	    long charge = 0L;
+	    if (chargeMoney != null && !chargeMoney.trim().isEmpty()) {
+	        try { charge = Long.parseLong(chargeMoney.trim()); }
+	        catch (NumberFormatException e) { charge = 0L; }
+	    }
+	    if (charge < 0) charge = 0L;
+
+	    //6、新余额：只有 charge > 0 时才真正增加
+	    long newMoney = oldMoney + charge;
+
+	    //7、调 service 更新
+	    boolean result = userService.updateUserInfo(
+	            user.getUser_id(),
+	            user.getUser_info_id(),
+	            userPass,
+	            userPhone,
+	            String.valueOf(newMoney));
+
+	    //8、成功后同步 session（否则页面回显旧值）
+	    if (result) {
 	        user.setUser_password(userPass);
 	        user.setUser_phone(userPhone);
-	        user.setUser_money(String.valueOf(money));
+	        user.setUser_money(String.valueOf(newMoney));
 	        session.setAttribute("user", user);
-	        //注意：这里如果输出有换行符的话，返回前端是"1\n"，在JS中1\n=="1"是false
-	        resp.getWriter().print(1);
-	    }else {
-	        resp.getWriter().println(0);
+	       // 必须用 print，不能用 println
+	        resp.getWriter().print("1");      
+	    } else {
+	        resp.getWriter().print("0");
 	    }
 	}
-
 	
 }

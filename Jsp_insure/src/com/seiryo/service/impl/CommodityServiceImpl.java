@@ -69,6 +69,7 @@ public class CommodityServiceImpl implements CommodityService{
 			//获取商品使用性别：1男，2女，3不限性别
 			Integer cg = c.getCommodity_applicable_gender();  
 			//6、性别匹配条件
+			//null:这个商品没填适用性别 → 不限制，谁都合适;3:不限性别；sex:商品的适用性别正好等于用户自己的性别
 			boolean sexFit = (cg == null || cg == 3 || cg == sex);
 			
 			//7、判断分支
@@ -117,7 +118,7 @@ public class CommodityServiceImpl implements CommodityService{
 
 	/** 
 	 * 性别映射：先生=1，女士=2
-	 * 因为注册的时候存进库的是男和女；但是数据库显示存的是“先生”“女”，所有要转换
+	 * 因为注册的时候存进库的是男和女；但是数据库显示存的是“先生”“女士”，所有要转换
 	 *  */
 	private int getUserSex(MyUserInfo myUserInfo) {
 		String sex=myUserInfo.getUser_sex();

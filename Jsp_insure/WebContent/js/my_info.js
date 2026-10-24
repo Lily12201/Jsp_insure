@@ -5,10 +5,10 @@ console.log("my_info.jsp文件加载成功");
 $(function(){
 	$("#updateuserinfo").click(function(){
 		console.log("按钮点击事件已经触发！");
-			//1、取值
-			var userPass = $("#userPass").val();
-			var userPhone = $("#userPhone").val();
-			var chargeMoney = $("#chargeMoney").val();
+		      //1、取值（trim 防空格）
+				var userPass    = $.trim($("#userPass").val());
+				var userPhone   = $.trim($("#userPhone").val());
+				var chargeMoney = $.trim($("#chargeMoney").val());
 
 			//2、密码校验：6~16位，\w 代表字母、数字或下划线,可以纯数字
 			var passReg = /^(\w){6,16}$/;;
@@ -25,12 +25,16 @@ $(function(){
 			}
 
 			//4、充值金额校验：必须是数字且大于0
-			var money = Number(chargeMoney);
-			if(isNaN(money) || money <= 0){
-				alert("チャージ金額は0より大きい数字を入力してください！");
-				return;
-			}
-			console.log("准备发送Ajax请求！");
+			//充值金额：空值/0等于不充值，放行，可以修改密码和手机号
+			var money = 0;
+					if(chargeMoney !== "" && chargeMoney !== "0"){
+						if(!/^\d+$/.test(chargeMoney) || Number(chargeMoney) <= 0){
+							alert("チャージ金額は0より大きい整数を入力してください！");
+							return;
+						}
+						money = Number(chargeMoney);
+					}
+			console.log("准备发送Ajax请求！chargeMoney = " + money);
 			//5、校验都通过，提交后端
 			$.ajax({
 				url:"/Jsp_insure/UserServlet",
@@ -39,7 +43,8 @@ $(function(){
 					opt:"user_update",
 					userPass:userPass,
 					userPhone:userPhone,
-					chargeMoney:chargeMoney
+					// 不充值就是 0
+					chargeMoney:money   
 				},
 				dataType:"text",
 				success:function(result){

@@ -53,19 +53,27 @@ window.onload = function(){
 }
 //保险期间变化：总额=（基础价+已选加价）×年数
 function calcYearPrice(obj){
+	//obj 就是传进来的 this——也就是那个下拉框元素本身
 	var years = parseInt(obj.value);
+	//兜底方法：和 try-catch 是同一类防御写法
 	if(isNaN(years) || years < 1){ years = 1; }
+	//从隐藏域取基础价当起始值
 	var total = parseFloat(document.getElementById("price_value").value);
+	//取出"我勾选过哪些加价项"的 key 清单
 	var dv = sessionStorage.getItem("dataValue");
 	if(dv != null){
 		var keys = dv.split(",");
+		//按逗号切成数组：["zy","zd","jt","jb",""]
 		for(var i = 0; i < keys.length; i++){
+			//跳过末尾那个空串（因为存的时候是 "zy,zd,jt,jb," 带尾逗号
 			if(keys[i] != ""){
+				//把每个加价项的金额取出来累加，取不到就跳过
 				var v = parseFloat(sessionStorage.getItem(keys[i]));
 				if(!isNaN(v)){ total += v; }
 			}
 		}
 	}
+	//写回页面显示
 	document.getElementById("price_view").innerHTML = total * years;
 }
 
